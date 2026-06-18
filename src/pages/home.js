@@ -1,7 +1,9 @@
 export function home() {
   return `
-  <div>
-    <h1>HOME</h1>
+  <div class="container">
+    <div class="row">
+      <h1>HOME</h1>
+    </div>
   </div>
   `;
 }
