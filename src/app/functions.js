@@ -1,4 +1,4 @@
-import { route } from "../pages/pages";
+import { route } from "../routes/index.js";
 
 const renderPage = (path = '/home') => {
   const page = path.slice(1).toLowerCase() || 'home';
