@@ -1,5 +1,5 @@
 import { home } from "./pages/home.js";
-import { pagina } from "./pages/pagina.js";
+import { productos } from "./pages/productos.js";
 
 //*ROUTES*****************************************************/
 export function route(page) {
@@ -8,5 +8,5 @@ export function route(page) {
 
 export const routes = {
   'home': home,
-  'pagina': pagina
+  'productos': productos
 };
