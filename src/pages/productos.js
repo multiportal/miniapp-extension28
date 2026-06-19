@@ -1,7 +1,7 @@
+//import { variables } from "../app/functions.js";
 import { getData } from '../app/services/firebase.js';
 
 export function productos() {
-
     const products = async () => {
         let html = '';
         const data = await getData('/vcard_vcard'); console.log(data);
@@ -15,6 +15,7 @@ export function productos() {
                     <div class="card-body">
                         <h5 class="card-title mb-0">${nombre}</h5>
                         <p class="card-text">${email}</p>
+                        <a href="/productos/item" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
                 `;
