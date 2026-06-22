@@ -13,6 +13,9 @@ async function btnGuardar(e) {
     console.log('Usuario inició sesión:', userCredential.user);
     const form = document.querySelector("#login-form");
     if (form) form.reset();
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 500);
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     if (error.code === 'auth/wrong-password') {
@@ -52,9 +55,6 @@ export function login() {
       </div>
     </div>
   </div>
-</div>
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div id="liveToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true"></div>
 </div>
  `;
 }

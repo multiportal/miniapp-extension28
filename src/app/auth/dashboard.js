@@ -1,5 +1,7 @@
+import { sesionActiva } from "../services/firebase";
 
 export function dashboard() {
+  //sesionActiva();
  return `
  <div class="container">
    <div class="row">

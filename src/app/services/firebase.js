@@ -2,6 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebas
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 import { getDatabase, ref, set, onValue, child, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+import { prefix, variables, showMessage } from "../functions";
+import { renderPage } from "../../routes";
 // TODO: Add SDKs for Firebase products that you want to use
 console.log('Firebase SDK');
 // Your web app's Firebase configuration
@@ -27,10 +29,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getDatabase(app);//Realtime Database
-export const fs = getFirestore(app);//FireStore
+export const App = initializeApp(firebaseConfig);
+export const auth = getAuth(App);
+export const db = getDatabase(App);//Realtime Database
+export const fs = getFirestore(App);//FireStore
 
 //CRUD FUNCTIONS
 export function getData(tab) {
@@ -52,6 +54,17 @@ const loggedOutLinks = document.querySelectorAll(".logged-out");
 const loggedInLinks = document.querySelectorAll(".logged-in");
 
 export const loginCheck = (user) => {
+  console.log('loginCheck');
+  if (user) {
+    loggedInLinks.forEach((link) => (link.style.display = "block"));
+    loggedOutLinks.forEach((link) => (link.style.display = "none"));
+  } else {
+    loggedInLinks.forEach((link) => (link.style.display = "none"));
+    loggedOutLinks.forEach((link) => (link.style.display = "block"));
+  }
+};
+
+/*export const loginCheck = (user) => {
   console.log('loginCheck');
   const btnLogout = document.querySelector('#logout-1');
   const btnRegis = document.querySelector('#btnRegis');
@@ -83,7 +96,7 @@ export const loginCheck = (user) => {
       });
     }
   }
-};
+};*/
 
 export function saveUser(user) {
   console.log('saveUser');
@@ -93,7 +106,7 @@ export function saveUser(user) {
     email: user.email,
     foto: user.photoURL
   };
-  set(ref(db, "vcard_signup/" + user.uid), u);
+  set(ref(db, prefix + "signup/" + user.uid), u);
 }
 
 export function getUserSesion(user) {
@@ -101,7 +114,7 @@ export function getUserSesion(user) {
   const nom = document.querySelector("#nombre_session");
   const mail = document.querySelector("#email_session");
   const uid = document.querySelector("#id_code_google");
-  const tabRef = ref(db, 'vcard_signup/');
+  const tabRef = ref(db, prefix + 'signup/');
   onValue(tabRef, (snapshot) => {
     const data = snapshot.val(); //console.log(data);
     for (let key in data) {
@@ -109,23 +122,37 @@ export function getUserSesion(user) {
       if (u.uid == user.uid) {
         console.log(u);
         const f = (u.foto == null) ? page_url + 'bloques/files/images/photos/sinfoto.png' : u.foto;
-        const cover = '<img src="' + f + '" class="img-fluid rounded-circle">';
-        const nombre = (u.usuario == null) ? u.email : u.usuario;
-        const correo = u.email;
-        const ID_user = u.uid;
-
-        foto.innerHTML = cover;
-        nom.innerHTML = nombre;
-        mail.innerHTML = correo;
-        uid.innerHTML = ID_user;
+        foto.innerHTML = '<img src="' + f + '" class="img-fluid rounded-circle">';
+        nom.innerHTML = (u.usuario == null) ? u.email : u.usuario;
+        mail.innerHTML = u.email;
+        uid.innerHTML = u.uid;
       }
     }
   });
 }
 
-export function sesionActiva() {
-console.log('sesion activa:');
-onAuthStateChanged(auth, async (user)=>{
-  console.log(user);
-});
+export function sesionActiva(v) {
+  const { mod } = v;
+  onAuthStateChanged(auth, async (user) => {
+    console.log(mod, 'sesion activa:', user);
+    if (user) {
+      loginCheck(user);
+      if (mod == 'dashboard') {
+        try {
+          saveUser(user);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } else {
+      loginCheck(user);
+    }
+    if (mod == 'dashboard' && user) {
+      showMessage('Bienvenido', 'Información')
+    }
+    if (mod == 'dashboard' && !user) {
+      history.pushState({}, "", '/noauth');
+      renderPage('noauth');
+    }
+  });
 }

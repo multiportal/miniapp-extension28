@@ -1,15 +1,15 @@
 import { signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-import { auth } from "../services/firebase";
+import { auth } from "../services/firebase.js";
+import { renderPage } from "../../routes.js";
 
 export function logout() {
   const closeSesion = async () => {
     await signOut(auth);
     console.log('Cerrando sesión...');
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 3000);
+    history.pushState({}, "", '/');
+    renderPage('');
   }
-  closeSesion();
+  setTimeout(closeSesion, 3000);
   return `
  <div class="container">
    <div class="row">

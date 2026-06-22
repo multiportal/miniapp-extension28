@@ -2,6 +2,12 @@ import { renderPage, navigate } from "../routes.js";
 import { sesionActiva } from "./services/firebase.js";
 
 /* ==========================
+   CONSTANTES 
+========================== */
+export const app = document.querySelector("#app");
+export const prefix = 'venta_'
+
+/* ==========================
    VARIABLES
 ========================== */
 export function variables() {
@@ -18,6 +24,8 @@ export function variables() {
   const dominio = origin;
   const URL = href;
   const path = pathname;
+  //
+  const { mod, ext, id } = urlVariables(path);
 
   return {
     w,
@@ -37,20 +45,23 @@ export function variables() {
     search,
     dominio,
     URL,
-    path
+    path,
+    mod,
+    ext,
+    id
   };
 }
 
 /* ==========================
    PARAMETROS URL
 ========================== */
-export function urlVars(search = window.location.search) {
-  const params = new URLSearchParams(search);
-  return {
-    mod: params.get("mod") || "Home",
-    ext: params.get("ext") || "index",
-    id: params.get("id") || ""
-  };
+export function urlVariables(path) {
+  const vars = path.split('/'); console.log(vars);
+  var mod = vars[1] === '' ? 'home' : vars[1];
+  var ext = vars[2] === '' || vars[2] === undefined ? '' : vars[2];
+  var id = vars[3] === '' || vars[3] === undefined ? '' : vars[3];
+  const url_var = { mod, ext, id };
+  return url_var;
 }
 
 /* ==========================
@@ -73,9 +84,9 @@ export function loadNavigate() {
    LOAD
 ========================== */
 export function load() {
-  const app = document.querySelector("#app");
+  //const app = document.querySelector("#app");
   if (!app) return;
-  sesionActiva();
+  //sesionActiva();
   //Navegación
   loadNavigate();
   // Observador para detectar cambios en el DOM
