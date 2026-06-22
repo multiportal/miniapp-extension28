@@ -1,11 +1,12 @@
 //import { variables } from "../app/functions.js";
+import { prefix } from '../app/functions.js';
 import { getData } from '../app/services/firebase.js';
 
 export function productos() {
     const products = async () => {
         let html = '';
-        const data = await getData('/vcard_vcard'); console.log(data);
-        const productList = document.getElementById('product-list');
+        const data = await getData('productos'); console.log(data);
+        const productList = document.querySelector('#product-list');
         if (!data) {
             productList.innerHTML = '<p>No hay productos disponibles.</p>';
             return;

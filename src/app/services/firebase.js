@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
-import { getDatabase, ref, set, onValue, child, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+import { getDatabase, ref, set, push, child, remove, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 import { prefix, variables, showMessage } from "../functions";
 import { renderPage } from "../../routes";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -37,16 +37,42 @@ export const fs = getFirestore(App);//FireStore
 //CRUD FUNCTIONS
 export function getData(tab) {
   return new Promise((resolve, reject) => {
-    const tabRef = ref(db, tab + '/');
+    const tabRef = ref(db, `${prefix}${tab}/`);
     onValue(tabRef, (snapshot) => {
-      const data = snapshot.val(); //console.log(data);
-      data ?
-        resolve(Object.entries(data).map(([key, item]) => ({ key, ...item }))) :
-        resolve(null);
+      const data = snapshot.val(); console.log(data);
+      data ? resolve(Object.entries(data).map(([key, item]) => ({ key, ...item }))) : resolve(null);
+      //resolve([data]);
     }, (error) => {
       reject(error);
     });
   });
+}
+
+export function postData(tab, body) {
+  set(ref(db, `${prefix}${tab}/`), body);
+}
+
+export async function createData(tab, body) {
+  const newRef = push(ref(db, `${prefix}${tab}/`));
+  await set(newRef, body);
+  return newRef.key;
+}
+
+export async function putData(tab, id, body) {
+  await update(ref(db, `${prefix}${tab}/${id}`), body);
+}
+
+export async function deleteData(tab, id) {
+  await remove(ref(db, `${prefix}${tab}/${id}`));
+}
+
+export async function getDataById(tab, id) {
+  const snapshot = await get(child(ref(db), `${prefix}${tab}/${id}`));
+  if (!snapshot.exists()) { return null; }
+  return {
+    key: snapshot.key,
+    ...snapshot.val()
+  };
 }
 
 //APP
@@ -62,40 +88,6 @@ export const loginCheck = (user) => {
     loggedOutLinks.forEach((link) => (link.style.display = "block"));
   }
 };
-
-/*export const loginCheck = (user) => {
-  console.log('loginCheck');
-  const btnLogout = document.querySelector('#logout-1');
-  const btnRegis = document.querySelector('#btnRegis');
-  const btnLogin = document.querySelector('#btnLogin');
-  const formRegis = document.querySelector('.registro-page');
-  const formLogin = document.querySelector('.login-page');
-  const dash = document.querySelector('.dashboard');
-
-  if (user) {
-    formLogin.style.display = 'none';
-    formRegis.style.display = 'none';
-    dash.style.display = 'block';
-    //if(btnLogout){btnLogout.style.display = "block";}
-  } else {
-    formLogin.style.display = 'block';
-    //formRegis.style.display = 'block';
-    dash.style.display = 'none';
-    //if(btnLogout){btnLogout.style.display = "none";}
-    if (btnRegis) {
-      btnRegis.addEventListener('click', () => {
-        formRegis.style.display = 'block';
-        formLogin.style.display = 'none';
-      });
-    }
-    if (btnLogin) {
-      btnLogin.addEventListener('click', () => {
-        formRegis.style.display = 'none';
-        formLogin.style.display = 'block';
-      });
-    }
-  }
-};*/
 
 export function saveUser(user) {
   console.log('saveUser');
