@@ -50,7 +50,7 @@ export function login() {
         </div>
         <button type="submit" class="btn btn-primary">Aceptar</button>
       </form>
-      <div>
+      <div class="barLogin">
         <a href="/">Inicio</a> | <a href="/registro">Registrarse</a> | <a href="/forget">Recuperar Contraseña</a>
       </div>
     </div>

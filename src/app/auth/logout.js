@@ -12,10 +12,12 @@ export function logout() {
   setTimeout(closeSesion, 3000);
   return `
  <div class="container">
-   <div class="row">
-     <h1>LOGOUT</h1>
-     <p>Cerrando sesión...</p>
-   </div>
- </div>
+    <div class="row text-center">
+      <div class="col-12">
+        <h1>LOGOUT</h1>
+        <p>Cerrando sesión...</p>
+      </div>
+    </div>
+  </div>
  `;
 }

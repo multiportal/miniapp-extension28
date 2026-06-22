@@ -50,7 +50,7 @@ export function register() {
         </div>
         <button type="submit" class="btn btn-primary">Aceptar</button>
       </form>
-      <div>
+      <div class="barLogin">
         <a href="/">Inicio</a> | <a href="/login">Login</a> | <a href="/forget">Recuperar Contraseña</a>
       </div>
     </div>

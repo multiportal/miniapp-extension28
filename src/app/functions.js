@@ -71,7 +71,7 @@ export function loadNavigate() {
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a");
     if (!link) return;
-    const ruta = link.getAttribute("href"); console.log("Ruta:", ruta);
+    const ruta = link.getAttribute("href"); //console.log("Ruta:", ruta);
     if (!ruta || ruta.startsWith("http") || ruta.startsWith("mailto:") || ruta.startsWith("tel:")) {
       return;
     }
