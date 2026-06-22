@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { auth } from "../services/firebase.js";
 import { showMessage } from "../functions.js";
 
@@ -9,34 +9,37 @@ async function btnGuardar(e) {
   let p = document.getElementById('password').value;
   console.log('Usuario:', u, 'Password:', p);
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, u, p);
-    console.log('Usuario inició sesión:', userCredential.user);
-    const form = document.querySelector("#login-form");
+    const userCredential = await createUserWithEmailAndPassword(auth, u, p); 
+    console.log('Usuario registrado:', userCredential.user);
+    const form = document.querySelector("#register-form");
     if (form) form.reset();
+    showMessage("Registro exitoso", "Exito");
   } catch (error) {
-    console.error('Error al iniciar sesión:', error);
-    if (error.code === 'auth/wrong-password') {
-      showMessage("Contraseña incorrecta", "Error")
-    } else if (error.code === 'auth/user-not-found') {
-      showMessage("Email no encontrado", "Error")
+    console.error('Error al registrarse:', error);
+    if (error.code === 'auth/email-already-in-use') {
+      showMessage("Email ya registrado", "Error")
+    } else if (error.code === 'auth/invalid-email') {
+      showMessage("Email invalido", "Error")
+    } else if (error.code === 'auth/weak-password') {
+      showMessage("Password débil", "Error")
     } else if (error.code) {
       showMessage("Hubo un error, intenta de nuevo", "Error")
     }
   }
 }
 
-export function login() {
+export function register() {
   setTimeout(() => {
-    const form = document.querySelector('form#login-form');
+    const form = document.querySelector("#register-form");
     if (!form) return;
-    form.addEventListener('submit', btnGuardar);
+    form.addEventListener("submit", btnGuardar);
   }, 0);
   return `
 <div class="container">
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <h1>LOGIN</h1>
-      <form id="login-form">
+      <h1>REGISTRO</h1>
+      <form id="register-form">
         <div class="mb-3">
           <label for="username" class="form-label">Email</label>
           <input type="username" class="form-control" id="username" required>
@@ -48,7 +51,7 @@ export function login() {
         <button type="submit" class="btn btn-primary">Aceptar</button>
       </form>
       <div>
-        <a href="/">Inicio</a> | <a href="/registro">Registrarse</a> | <a href="/forget">Recuperar Contraseña</a>
+        <a href="/">Inicio</a> | <a href="/login">Login</a> | <a href="/forget">Recuperar Contraseña</a>
       </div>
     </div>
   </div>
@@ -56,5 +59,5 @@ export function login() {
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
   <div id="liveToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true"></div>
 </div>
- `;
+`;
 }

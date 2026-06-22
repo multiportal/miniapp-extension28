@@ -6,6 +6,10 @@ export function productos() {
         let html = '';
         const data = await getData('/vcard_vcard'); console.log(data);
         const productList = document.getElementById('product-list');
+        if (!data) {
+            productList.innerHTML = '<p>No hay productos disponibles.</p>';
+            return;
+        }
         //Cards
         for (const item of data) {
             const { ID, key, nombre, email, visible } = item;

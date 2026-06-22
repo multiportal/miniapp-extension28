@@ -1,4 +1,5 @@
 import { variables } from "./app/functions.js";
+import { register } from "./app/auth/register.js";
 import { login } from "./app/auth/login.js";
 import { logout } from "./app/auth/logout.js";
 import { dashboard } from "./app/auth/dashboard.js";
@@ -14,6 +15,7 @@ export const routes = {
   'productos': productos,
   'login': login, 
   'logout': logout,
+  'registro': register,
   'dashboard': dashboard,
   '404': notFound
 };
