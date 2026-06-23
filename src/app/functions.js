@@ -56,7 +56,7 @@ export function variables() {
    PARAMETROS URL
 ========================== */
 export function urlVariables(path) {
-  const vars = path.split('/'); console.log(vars);
+  const vars = path.split('/'); //console.log(vars);
   var mod = vars[1] === '' ? 'home' : vars[1];
   var ext = vars[2] === '' || vars[2] === undefined ? '' : vars[2];
   var id = vars[3] === '' || vars[3] === undefined ? '' : vars[3];
@@ -126,7 +126,7 @@ function closeAlert() {
 }
 
 export function showMessage(msj, type) {
-  console.log('showMessage:', msj, type);
+  //console.log('showMessage:', msj, type);
   const alert = document.querySelector('#liveToast');
   if (!alert) return;
   alert.classList.remove('hide');

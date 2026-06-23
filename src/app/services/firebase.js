@@ -39,9 +39,8 @@ export function getData(tab) {
   return new Promise((resolve, reject) => {
     const tabRef = ref(db, `${prefix}${tab}/`);
     onValue(tabRef, (snapshot) => {
-      const data = snapshot.val(); console.log(data);
+      const data = snapshot.val(); //console.log(data);
       data ? resolve(Object.entries(data).map(([key, item]) => ({ key, ...item }))) : resolve(null);
-      //resolve([data]);
     }, (error) => {
       reject(error);
     });
@@ -55,15 +54,18 @@ export function postData(tab, body) {
 export async function createData(tab, body) {
   const newRef = push(ref(db, `${prefix}${tab}/`));
   await set(newRef, body);
+  showMessage("Se agrego correctamente", "Exito");
   return newRef.key;
 }
 
 export async function putData(tab, id, body) {
   await update(ref(db, `${prefix}${tab}/${id}`), body);
+  showMessage("Se actualizo correctamente", "Exito");
 }
 
 export async function deleteData(tab, id) {
   await remove(ref(db, `${prefix}${tab}/${id}`));
+  showMessage("Se elimino correctamente", "Exito");
 }
 
 export async function getDataById(tab, id) {
@@ -90,7 +92,7 @@ export const loginCheck = (user) => {
 };
 
 export function saveUser(user) {
-  console.log('saveUser');
+  //console.log('saveUser');
   var u = {
     uid: user.uid,
     usuario: user.displayName,
@@ -139,7 +141,7 @@ export function sesionActiva(v) {
       loginCheck(user);
     }
     if (mod == 'dashboard' && user) {
-      showMessage('Bienvenido', 'Información')
+      showMessage('Bienvenido', 'Información');
     }
     if (mod == 'dashboard' && !user) {
       history.pushState({}, "", '/noauth');

@@ -3,11 +3,16 @@ import { getData, createData, putData, deleteData, getDataById } from "../servic
 export function dashboard() {
   const tab = "productos";
 
+  const toggleTitle = () => {
+    const mode = localStorage.getItem("Mode");
+    document.querySelector('#title').innerHTML = mode == 'edit' ? 'Editar' : 'Nuevo';
+  };
+
   const btnCancelar = () => {
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("#btnCancel");
       if (!btn) return; 
-      setTimeout(() => { products(); }, 1000);
+      setTimeout(() => { products(); }, 100);
     });
   };
 
@@ -16,7 +21,7 @@ export function dashboard() {
       const btn = e.target.closest(".delete-btn");
       if (!btn) return;
       Swal.fire({
-        title: "Esta seguro eliminar?",
+        title: "¿Esta seguro eliminar?",
         text: "¡Este cambio sera irreversible!",
         icon: "warning",
         showCancelButton: true,
@@ -50,12 +55,13 @@ export function dashboard() {
       console.log("Editar:", key);
       localStorage.setItem("Mode", "edit");
       localStorage.setItem("Key", key);
-      const item = await getDataById(tab, key);
-      console.log(item);
+      const item = await getDataById(tab, key);//console.log(item);
       document.querySelector("#Id").value = item.Id;
       document.querySelector("#nombre").value = item.nombre;
       document.querySelector("#precio").value = item.precio;
+      document.querySelector("#link").value = item.link;
       document.querySelector("#desc").value = item.desc;
+      toggleTitle();
     });
   };
 
@@ -67,13 +73,15 @@ export function dashboard() {
     const Id = document.querySelector("#Id").value;
     const nombre = document.querySelector("#nombre").value;
     const precio = document.querySelector("#precio").value;
+    const link = document.querySelector("#link").value;
     const desc = document.querySelector("#desc").value;
     const body = {
       Id,
       nombre,
       precio,
+      link,
       desc,
-    }; console.log(body);
+    }; //console.log(body);
     if (mode == "add") {
       createData(tab, body);
     } else {
@@ -97,13 +105,13 @@ export function dashboard() {
     }
     //Cards
     for (const item of data) {
-      var { Id, key, nombre, precio, desc } = item;
+      var { Id, key, nombre, precio, link, desc } = item;
       //if (visible) {
       html += `
         <tr key="${key}">
           <th scope="row">${Id}</th>
-          <td>${nombre}</td>
-          <td>${precio}</td>
+          <td title="${link}">${nombre}</td>
+          <td>$${precio}.00</td>
           <td>${desc}</td>
           <td>
             <button type="button" class="btn btn-primary mb-3 edit-btn">
@@ -121,6 +129,7 @@ export function dashboard() {
     const form = document.querySelector("#save-form");
     form.reset();
     document.querySelector("#Id").value = Number(Id) + 1;
+    toggleTitle();
   };
 
   setTimeout(() => { products(); }, 1000);
@@ -139,7 +148,8 @@ export function dashboard() {
      <h1>DASHBOARD</h1>
      <div class="col-md-4">
       <form id="save-form">
-        <input type="text" class="form-control" id="Id">
+        <h2 id="title"></h2>
+        <input type="hidden" class="form-control" id="Id">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre*</label>
           <input type="text" class="form-control" id="nombre" required>
@@ -149,8 +159,12 @@ export function dashboard() {
           <input type="text" class="form-control" id="precio" required>
         </div>
         <div class="mb-3">
+          <label for="link" class="form-label">Url Paypal</label>
+          <input type="text" class="form-control" id="link">
+        </div>
+        <div class="mb-3">
           <label for="desc" class="form-label">Descripción</label>
-          <input type="text" class="form-control" id="desc">
+          <textarea class="form-control" rows="2" id="desc"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
         <button type="button" class="btn btn-danger" id="btnCancel">Cancelar</button>

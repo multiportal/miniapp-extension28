@@ -13,14 +13,14 @@ export function productos() {
         }
         //Cards
         for (const item of data) {
-            var { Id, key, nombre, precio, desc } = item;
+            const { Id, key, nombre, precio, link, desc } = item;
             //if (visible) {
                 html += `
                 <div class="card mb-3" key="${key}">
                     <div class="card-body">
-                        <h5 class="card-title mb-0">${nombre}</h5>
+                        <h5 class="card-title mb-0">${nombre} - $${precio}.00</h5>
                         <p class="card-text">${desc}</p>
-                        <a href="/productos/item" class="btn btn-primary">Ver más</a>
+                        <a href="${link ? link : ''}" class="btn btn-primary">Comprar</a>
                     </div>
                 </div>
                 `;
