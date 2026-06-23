@@ -1,18 +1,34 @@
 import { sesionActiva, getData, postData, createData, putData, deleteData, getDataById } from "../services/firebase";
 
 export function dashboard() {
-  localStorage.setItem('Mode', 'add');
   const tab = 'productos';
 
   const btnBorrar = () => {
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.delete-btn');
       if (!btn) return;
-      const fila = btn.closest('tr');
-      const key = fila.getAttribute('key');
-      console.log('Eliminar:', key);
-      deleteData(tab, key);
-      setTimeout(() => { products(); }, 1000);
+      Swal.fire({
+        title: "Esta seguro eliminar?",
+        text: "¡Este cambio sera irreversible!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const fila = btn.closest('tr');
+          const key = fila.getAttribute('key');
+          console.log('Eliminar:', key);
+          deleteData(tab, key);
+          setTimeout(() => { products(); }, 1000);
+          Swal.fire({
+            title: "¡Borrado!",
+            text: "Tu registro ha sisodo borrado",
+            icon: "success"
+          });
+        }
+      });
     });
   };
 
@@ -23,8 +39,8 @@ export function dashboard() {
       const fila = btn.closest('tr');
       const key = fila.getAttribute('key');
       console.log('Editar:', key);
-      localStorage.setItem('Mode','edit');
-      localStorage.setItem('Key',key);
+      localStorage.setItem('Mode', 'edit');
+      localStorage.setItem('Key', key);
       const item = await getDataById(tab, key);
       console.log(item);
       document.querySelector('#Id').value = item.Id;
@@ -51,9 +67,9 @@ export function dashboard() {
     }; console.log(body);
     if (mode == 'add') {
       createData(tab, body);
-    }else{
+    } else {
       const key = localStorage.getItem('Key');
-      if(!key) return;
+      if (!key) return;
       putData(tab, key, body);
     }
     const form = document.querySelector('form#save-form');
@@ -65,6 +81,8 @@ export function dashboard() {
     let html = '';
     const data = await getData(tab); console.log(data);
     const productList = document.querySelector('#product-list');
+    localStorage.removeItem('Key');
+    localStorage.setItem('Mode', 'add');
     if (!data) {
       document.querySelector('#Id').value = 1;
       productList.innerHTML = '<tr><td colspan="5"><p>No hay productos disponibles.</p></td></tr>';

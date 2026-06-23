@@ -13,18 +13,18 @@ export function productos() {
         }
         //Cards
         for (const item of data) {
-            const { ID, key, nombre, email, visible } = item;
-            if (visible) {
+            var { Id, key, nombre, precio, desc } = item;
+            //if (visible) {
                 html += `
                 <div class="card mb-3" key="${key}">
                     <div class="card-body">
                         <h5 class="card-title mb-0">${nombre}</h5>
-                        <p class="card-text">${email}</p>
+                        <p class="card-text">${desc}</p>
                         <a href="/productos/item" class="btn btn-primary">Ver más</a>
                     </div>
                 </div>
                 `;
-            }
+            //}
         }
         productList.innerHTML = html;
     };
