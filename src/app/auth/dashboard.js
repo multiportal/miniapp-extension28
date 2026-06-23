@@ -3,6 +3,14 @@ import { getData, createData, putData, deleteData, getDataById } from "../servic
 export function dashboard() {
   const tab = "productos";
 
+  const btnCancelar = () => {
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("#btnCancel");
+      if (!btn) return; 
+      setTimeout(() => { products(); }, 1000);
+    });
+  };
+
   const btnBorrar = () => {
     document.addEventListener("click", (e) => {
       const btn = e.target.closest(".delete-btn");
@@ -22,9 +30,7 @@ export function dashboard() {
           const key = fila.getAttribute("key");
           console.log("Eliminar:", key);
           deleteData(tab, key);
-          setTimeout(() => {
-            products();
-          }, 1000);
+          setTimeout(() => { products(); }, 1000);
           Swal.fire({
             title: "¡Borrado!",
             text: "Tu registro ha sido borrado",
@@ -75,15 +81,12 @@ export function dashboard() {
       if (!key) return;
       putData(tab, key, body);
     }
-    const form = document.querySelector("form#save-form");
-    form.reset();
     setTimeout(() => { products(); }, 1000);
   };
 
   const products = async () => {
     let html = "";
-    const data = await getData(tab);
-    console.log(data);
+    const data = await getData(tab); console.log(data);
     const productList = document.querySelector("#product-list");
     localStorage.removeItem("Key");
     localStorage.setItem("Mode", "add");
@@ -115,14 +118,15 @@ export function dashboard() {
       //}
     }
     productList.innerHTML = html;
+    const form = document.querySelector("#save-form");
+    form.reset();
     document.querySelector("#Id").value = Number(Id) + 1;
   };
 
-  setTimeout(() => {
-    products();
-  }, 1000);
+  setTimeout(() => { products(); }, 1000);
 
   setTimeout(() => {
+    btnCancelar();
     btnBorrar();
     btnEditar();
     const form = document.querySelector("#save-form");
@@ -135,7 +139,7 @@ export function dashboard() {
      <h1>DASHBOARD</h1>
      <div class="col-md-4">
       <form id="save-form">
-        <input type="text" class="form-control" id="Id" value="1">
+        <input type="text" class="form-control" id="Id">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre*</label>
           <input type="text" class="form-control" id="nombre" required>
@@ -149,7 +153,7 @@ export function dashboard() {
           <input type="text" class="form-control" id="desc">
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-danger" id="cancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btnCancel">Cancelar</button>
       </form>
      </div>
      <div class="col-md-8" style="overflow-y: auto; height: 500px;">

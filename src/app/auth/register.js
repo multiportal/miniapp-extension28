@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 import { auth } from "../services/firebase.js";
-import { showMessage } from "../functions.js";
+import { showMessage, toggleEye } from "../functions.js";
 
 async function btnGuardar(e) {
   e.preventDefault();
@@ -33,6 +33,7 @@ export function register() {
     const form = document.querySelector("#register-form");
     if (!form) return;
     form.addEventListener("submit", btnGuardar);
+    toggleEye();
   }, 0);
   return `
 <div class="container">
@@ -46,7 +47,12 @@ export function register() {
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" required>
+          <div class="input-group">
+            <input type="password" class="form-control" id="password" required>
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Aceptar</button>
       </form>

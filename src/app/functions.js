@@ -152,3 +152,16 @@ export function alertMessage(msj, type) {
         ${type}: ${msj}</div>`;
   }
 }
+
+export const toggleEye = () => {
+  const password = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const icon = togglePassword.querySelector('i');
+
+  togglePassword.addEventListener('click', () => {
+    const isPassword = password.type === 'password';
+    password.type = isPassword ? 'text' : 'password';
+    icon.classList.toggle('bi-eye');
+    icon.classList.toggle('bi-eye-slash');
+  });
+};
