@@ -27,7 +27,6 @@ export const routes = {
    ROUTER
 ========================== */
 export const renderPage = (path = "/home") => {
-  //const app = document.querySelector("#app");
   if (!app) return;
   const page = path.replace(/^\/+/, "").toLowerCase() || "home";
   const validPage = Object.hasOwn(routes, page) ? page : "404";

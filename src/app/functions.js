@@ -84,9 +84,7 @@ export function loadNavigate() {
    LOAD
 ========================== */
 export function load() {
-  //const app = document.querySelector("#app");
   if (!app) return;
-  //sesionActiva();
   //Navegación
   loadNavigate();
   // Observador para detectar cambios en el DOM
@@ -100,7 +98,7 @@ export function load() {
     subtree: true      // Incluye todos los descendientes
   });
   //Load route
-  renderPage(window.location.pathname);
+  renderPage('/');
   //Handle back/forward navigation
   window.addEventListener('popstate', () => {
     renderPage(window.location.pathname);
@@ -126,7 +124,6 @@ function closeAlert() {
 }
 
 export function showMessage(msj, type) {
-  //console.log('showMessage:', msj, type);
   const alert = document.querySelector('#liveToast');
   if (!alert) return;
   alert.classList.remove('hide');
