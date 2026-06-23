@@ -61,7 +61,7 @@ body {
 
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 200px) {
   #app {
     width: 600px;
     height: 500px;
