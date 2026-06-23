@@ -1,31 +1,34 @@
-import { sesionActiva, getData, postData, createData, putData, deleteData, getDataById } from "../services/firebase";
+import { getData, createData, putData, deleteData, getDataById } from "../services/firebase";
 
 export function dashboard() {
-  const tab = 'productos';
+  const tab = "productos";
 
   const btnBorrar = () => {
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.delete-btn');
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".delete-btn");
       if (!btn) return;
       Swal.fire({
         title: "Esta seguro eliminar?",
         text: "¡Este cambio sera irreversible!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar"
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Aceptar",
       }).then((result) => {
         if (result.isConfirmed) {
-          const fila = btn.closest('tr');
-          const key = fila.getAttribute('key');
-          console.log('Eliminar:', key);
+          const fila = btn.closest("tr");
+          const key = fila.getAttribute("key");
+          console.log("Eliminar:", key);
           deleteData(tab, key);
-          setTimeout(() => { products(); }, 1000);
+          setTimeout(() => {
+            products();
+          }, 1000);
           Swal.fire({
             title: "¡Borrado!",
-            text: "Tu registro ha sisodo borrado",
-            icon: "success"
+            text: "Tu registro ha sido borrado",
+            icon: "success",
           });
         }
       });
@@ -33,28 +36,28 @@ export function dashboard() {
   };
 
   const btnEditar = () => {
-    document.addEventListener('click', async (e) => {
-      const btn = e.target.closest('.edit-btn');
+    document.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".edit-btn");
       if (!btn) return;
-      const fila = btn.closest('tr');
-      const key = fila.getAttribute('key');
-      console.log('Editar:', key);
-      localStorage.setItem('Mode', 'edit');
-      localStorage.setItem('Key', key);
+      const fila = btn.closest("tr");
+      const key = fila.getAttribute("key");
+      console.log("Editar:", key);
+      localStorage.setItem("Mode", "edit");
+      localStorage.setItem("Key", key);
       const item = await getDataById(tab, key);
       console.log(item);
-      document.querySelector('#Id').value = item.Id;
-      document.querySelector('#nombre').value = item.nombre;
-      document.querySelector('#precio').value = item.precio;
-      document.querySelector('#desc').value = item.desc;
+      document.querySelector("#Id").value = item.Id;
+      document.querySelector("#nombre").value = item.nombre;
+      document.querySelector("#precio").value = item.precio;
+      document.querySelector("#desc").value = item.desc;
     });
   };
 
   const btnGuardar = async (e) => {
     e.preventDefault();
-    const mode = localStorage.getItem('Mode');
+    const mode = localStorage.getItem("Mode");
     if (!mode) return;
-    console.log('Mode:', mode);
+    console.log("Mode:", mode);
     const Id = document.querySelector("#Id").value;
     const nombre = document.querySelector("#nombre").value;
     const precio = document.querySelector("#precio").value;
@@ -63,28 +66,29 @@ export function dashboard() {
       Id,
       nombre,
       precio,
-      desc
+      desc,
     }; console.log(body);
-    if (mode == 'add') {
+    if (mode == "add") {
       createData(tab, body);
     } else {
-      const key = localStorage.getItem('Key');
+      const key = localStorage.getItem("Key");
       if (!key) return;
       putData(tab, key, body);
     }
-    const form = document.querySelector('form#save-form');
+    const form = document.querySelector("form#save-form");
     form.reset();
     setTimeout(() => { products(); }, 1000);
   };
 
   const products = async () => {
-    let html = '';
-    const data = await getData(tab); console.log(data);
-    const productList = document.querySelector('#product-list');
-    localStorage.removeItem('Key');
-    localStorage.setItem('Mode', 'add');
+    let html = "";
+    const data = await getData(tab);
+    console.log(data);
+    const productList = document.querySelector("#product-list");
+    localStorage.removeItem("Key");
+    localStorage.setItem("Mode", "add");
     if (!data) {
-      document.querySelector('#Id').value = 1;
+      document.querySelector("#Id").value = 1;
       productList.innerHTML = '<tr><td colspan="5"><p>No hay productos disponibles.</p></td></tr>';
       return;
     }
@@ -111,17 +115,19 @@ export function dashboard() {
       //}
     }
     productList.innerHTML = html;
-    document.querySelector('#Id').value = Number(Id) + 1;
+    document.querySelector("#Id").value = Number(Id) + 1;
   };
 
-  setTimeout(() => { products(); }, 1000);
+  setTimeout(() => {
+    products();
+  }, 1000);
 
   setTimeout(() => {
     btnBorrar();
     btnEditar();
-    const form = document.querySelector('#save-form');
+    const form = document.querySelector("#save-form");
     if (!form) return;
-    form.addEventListener('submit', btnGuardar);
+    form.addEventListener("submit", btnGuardar);
   }, 0);
   return `
  <div class="container">
@@ -143,6 +149,7 @@ export function dashboard() {
           <input type="text" class="form-control" id="desc">
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-danger" id="cancel">Cancelar</button>
       </form>
      </div>
      <div class="col-md-8" style="overflow-y: auto; height: 500px;">
