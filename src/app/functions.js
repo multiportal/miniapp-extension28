@@ -97,7 +97,7 @@ export function load() {
     subtree: true      // Incluye todos los descendientes
   });
   //Load route
-  renderPage(window.location.pathname);
+  renderPage('/');
   //Handle back/forward navigation
   window.addEventListener('popstate', () => {
     renderPage(window.location.pathname);
