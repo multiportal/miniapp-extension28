@@ -7,17 +7,6 @@ import { renderPage } from "../../routes";
 // TODO: Add SDKs for Firebase products that you want to use
 console.log('Firebase SDK');
 // Your web app's Firebase configuration
-/*var firebaseConfig = {
-  apiKey: "AIzaSyDeX81H_K8AsV2KjQgEbwxte6yVdSYqFXk",
-  authDomain: "vcardapp-js.firebaseapp.com",
-  databaseURL: "https://vcardapp-js.firebaseio.com",
-  projectId: "vcardapp-js",
-  storageBucket: "vcardapp-js.appspot.com",
-  messagingSenderId: "420720513571",
-  appId: "1:420720513571:web:f072eeda6cd3cfa1429796",
-  measurementId: "G-LDPZ4BZ1GV",
-};*/
-
 const firebaseConfig = {
   apiKey: "AIzaSyAOEuKTZEPTnUdjwzNpjVJdWAnz45umM-w",
   authDomain: "ventaapp-45918.firebaseapp.com",
@@ -34,7 +23,10 @@ export const auth = getAuth(App);
 export const db = getDatabase(App);//Realtime Database
 export const fs = getFirestore(App);//FireStore
 
-//CRUD FUNCTIONS
+/* ==========================
+   FUNCIONES CRUD
+========================== */
+/** GET - LISTAR **/
 export function getData(tab) {
   return new Promise((resolve, reject) => {
     const tabRef = ref(db, `${prefix}${tab}/`);
@@ -47,10 +39,7 @@ export function getData(tab) {
   });
 }
 
-export function postData(tab, body) {
-  set(ref(db, `${prefix}${tab}/`), body);
-}
-
+/** CREAR NUEVO REGISTRO **/
 export async function createData(tab, body) {
   const newRef = push(ref(db, `${prefix}${tab}/`));
   await set(newRef, body);
@@ -58,16 +47,24 @@ export async function createData(tab, body) {
   return newRef.key;
 }
 
+/** EDITAR REGISTRO **/
 export async function putData(tab, id, body) {
   await update(ref(db, `${prefix}${tab}/${id}`), body);
   showMessage("Se actualizo correctamente", "Exito");
 }
 
+/** CREAR/EDITAR REGISTRO **/
+export function postData(tab, body) {
+  set(ref(db, `${prefix}${tab}/`), body);
+}
+
+/** BORRAR REGISTRO **/
 export async function deleteData(tab, id) {
   await remove(ref(db, `${prefix}${tab}/${id}`));
   showMessage("Se elimino correctamente", "Exito");
 }
 
+/** BUSCAR POR ID REGISTRO **/
 export async function getDataById(tab, id) {
   const snapshot = await get(child(ref(db), `${prefix}${tab}/${id}`));
   if (!snapshot.exists()) { return null; }
@@ -77,7 +74,9 @@ export async function getDataById(tab, id) {
   };
 }
 
-//APP
+/* ==========================
+   APP - SESION
+========================== */
 const loggedOutLinks = document.querySelectorAll(".logged-out");
 const loggedInLinks = document.querySelectorAll(".logged-in");
 
